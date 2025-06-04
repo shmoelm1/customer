@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול לקוחות</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar h1 {
+            color: white;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 2rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            margin-bottom: 1.5rem;
+            color: #4a5568;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: linear-gradient(45deg, #f7fafc, #edf2f7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: linear-gradient(45deg, #e6fffa, #f0fff4);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+        }
+
+        .upload-area.dragover {
+            border-color: #48bb78;
+            background: linear-gradient(45deg, #f0fff4, #e6fffa);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.5rem 4rem 1.5rem 2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .results-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .customer-result {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .customer-result:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .customer-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .customer-id {
+            font-size: 1.1rem;
+            color: #667eea;
+            font-weight: 500;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #718096;
+            font-size: 1.1rem;
+            padding: 3rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 15px;
+        }
+
+        .file-status {
+            background: rgba(72, 187, 120, 0.1);
+            border: 1px solid rgba(72, 187, 120, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #2f855a;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .upload-area {
+                padding: 2rem 1rem;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🏢 מערכת ניהול לקוחות</h1>
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showScreen('admin')">מסך מנהל</button>
+            <button class="nav-btn" onclick="showScreen('user')">מסך משתמש</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- מסך מנהל -->
+        <div id="admin-screen" class="screen active">
+            <div class="card">
+                <h2>📊 ניהול קובץ לקוחות</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">גרור קובץ Excel לכאן או לחץ לבחירה</div>
+                    <div class="upload-subtext">תומך בקבצי .xlsx, .xls</div>
+                    <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls" />
+                </div>
+
+                <div id="fileStatus" class="file-status" style="display: none;">
+                    ✅ הקובץ נטען בהצלחה!
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCustomers">0</div>
+                        <div class="stat-label">סה"כ לקוחות</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="lastUpdate">-</div>
+                        <div class="stat-label">עדכון אחרון</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- מסך משתמש -->
+        <div id="user-screen" class="screen">
+            <div class="card">
+                <h2>🔍 חיפוש לקוח</h2>
+                
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="הקלד שם לקוח לחיפוש..." />
+                    <div class="search-icon">🔍</div>
+                </div>
+
+                <div id="searchResults" class="results-container">
+                    <div class="no-results">
+                        טען קובץ לקוחות במסך המנהל כדי להתחיל לחפש
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let customers = [];
+        let currentScreen = 'admin';
+
+        // החלפת מסכים
+        function showScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(screen + '-screen').classList.add('active');
+            event.target.classList.add('active');
+            currentScreen = screen;
+        }
+
+        // הגדרת אזור העלאה
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // טיפול בקובץ
+        function handleFile(file) {
+            if (!file.name.match(/\.(xlsx|xls)$/)) {
+                alert('אנא בחר קובץ Excel (.xlsx או .xls)');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    processCustomerData(jsonData);
+                    showFileStatus();
+                    updateStats();
+                } catch (error) {
+                    alert('שגיאה בקריאת הקובץ. אנא ודא שהקובץ תקין.');
+                    console.error(error);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // עיבוד נתוני לקוחות
+        function processCustomerData(data) {
+            customers = data.map((row, index) => {
+                // ניסיון לזהות עמודות נפוצות
+                const possibleNameFields = ['שם', 'שם לקוח', 'name', 'customer_name', 'לקוח'];
+                const possibleIdFields = ['מספר לקוח', 'מס לקוח', 'id', 'customer_id', 'מזהה'];
+                
+                let name = '';
+                let customerId = '';
+
+                // חיפוש שם
+                for (let field of possibleNameFields) {
+                    if (row[field]) {
+                        name = row[field];
+                        break;
+                    }
+                }
+
+                // חיפוש מספר לקוח
+                for (let field of possibleIdFields) {
+                    if (row[field]) {
+                        customerId = row[field];
+                        break;
+                    }
+                }
+
+                // אם לא נמצאו שדות מתאימים, קח את הערכים הראשונים
+                if (!name || !customerId) {
+                    const keys = Object.keys(row);
+                    name = name || row[keys[0]] || `לקוח ${index + 1}`;
+                    customerId = customerId || row[keys[1]] || `ID-${index + 1}`;
+                }
+
+                return {
+                    name: String(name),
+                    id: String(customerId),
+                    originalData: row
+                };
+            });
+        }
+
+        // הצגת סטטוס הקובץ
+        function showFileStatus() {
+            const status = document.getElementById('fileStatus');
+            status.style.display = 'block';
+            status.classList.add('pulse');
+            setTimeout(() => status.classList.remove('pulse'), 2000);
+        }
+
+        // עדכון סטטיסטיקות
+        function updateStats() {
+            document.getElementById('totalCustomers').textContent = customers.length;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('he-IL');
+        }
+
+        // חיפוש לקוחות
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            
+            if (customers.length === 0) {
+                searchResults.innerHTML = '<div class="no-results">טען קובץ לקוחות במסך המנהל כדי להתחיל לחפש</div>';
+                return;
+            }
+
+            if (query === '') {
+                searchResults.innerHTML = '<div class="no-results">הקלד שם לקוח לחיפוש</div>';
+                return;
+            }
+
+            const filteredCustomers = customers.filter(customer => 
+                customer.name.toLowerCase().includes(query.toLowerCase()) ||
+                customer.id.toLowerCase().includes(query.toLowerCase())
+            );
+
+            displaySearchResults(filteredCustomers, query);
+        });
+
+        // הצגת תוצאות חיפוש
+        function displaySearchResults(results, query) {
+            if (results.length === 0) {
+                searchResults.innerHTML = `<div class="no-results">לא נמצאו תוצאות עבור "${query}"</div>`;
+                return;
+            }
+
+            const resultsHTML = results.map(customer => `
+                <div class="customer-result" onclick="selectCustomer('${customer.name}', '${customer.id}')">
+                    <div class="customer-name">${highlightText(customer.name, query)}</div>
+                    <div class="customer-id">מספר לקוח: ${highlightText(customer.id, query)}</div>
+                </div>
+            `).join('');
+
+            searchResults.innerHTML = resultsHTML;
+        }
+
+        // הדגשת טקסט בחיפוש
+        function highlightText(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<mark style="background: #ffd700; padding: 2px 4px; border-radius: 3px;">$1</mark>');
+        }
+
+        // בחירת לקוח
+        function selectCustomer(name, id) {
+            const message = `נבחר לקוח: ${name}\nמספר לקוח: ${id}`;
+            alert(message);
+            
+            // כאן אפשר להוסיף פונקציונליות נוספת כמו:
+            // - העתקה ללוח
+            // - פתיחת חלון עם פרטים נוספים
+            // - שמירה בהיסטוריה
+        }
+
+        // דוגמת נתונים לבדיקה (ניתן להסיר)
+        function loadSampleData() {
+            const sampleData = [
+                { name: 'אברהם כהן', id: 'C001' },
+                { name: 'שרה לוי', id: 'C002' },
+                { name: 'דוד ישראלי', id: 'C003' },
+                { name: 'רחל גולדברג', id: 'C004' },
+                { name: 'יוסף מזרחי', id: 'C005' }
+            ];
+            
+            customers = sampleData.map(customer => ({
+                name: customer.name,
+                id: customer.id,
+                originalData: customer
+            }));
+            
+            updateStats();
+            showFileStatus();
+        }
+
+        // טעינת דוגמה אוטומטית לבדיקה
+        setTimeout(loadSampleData, 1000);
+    </script>
+</body>
+</html>
