@@ -10,30 +10,35 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
         }
+
         .navbar {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             padding: 1rem 2rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .navbar h1 {
             color: white;
             text-align: center;
             font-size: 2rem;
             font-weight: 300;
         }
+
         .nav-buttons {
             display: flex;
             justify-content: center;
             gap: 1rem;
             margin-top: 1rem;
         }
+
         .nav-btn {
             padding: 0.8rem 2rem;
             border: none;
@@ -46,23 +51,28 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
+
         .nav-btn:hover, .nav-btn.active {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
+
         .container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 2rem;
         }
+
         .screen {
             display: none;
             animation: fadeIn 0.5s ease-out;
         }
+
         .screen.active {
             display: block;
         }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -73,6 +83,7 @@
                 transform: translateY(0);
             }
         }
+
         .card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -82,6 +93,7 @@
             box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
         }
+
         .card h2 {
             margin-bottom: 1.5rem;
             color: #4a5568;
@@ -89,6 +101,7 @@
             font-size: 1.8rem;
             font-weight: 600;
         }
+
         .upload-area {
             border: 3px dashed #cbd5e0;
             border-radius: 15px;
@@ -100,37 +113,45 @@
             position: relative;
             overflow: hidden;
         }
+
         .upload-area:hover {
             border-color: #667eea;
             background: linear-gradient(45deg, #e6fffa, #f0fff4);
             transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
         }
+
         .upload-area.dragover {
             border-color: #48bb78;
             background: linear-gradient(45deg, #f0fff4, #e6fffa);
         }
+
         .upload-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
             color: #667eea;
         }
+
         .upload-text {
             font-size: 1.2rem;
             color: #4a5568;
             margin-bottom: 0.5rem;
         }
+
         .upload-subtext {
             color: #718096;
             font-size: 0.9rem;
         }
+
         .file-input {
             display: none;
         }
+
         .search-container {
             position: relative;
             margin-bottom: 2rem;
         }
+
         .search-input {
             width: 100%;
             padding: 1.5rem 4rem 1.5rem 2rem;
@@ -141,11 +162,13 @@
             transition: all 0.3s ease;
             background: white;
         }
+
         .search-input:focus {
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
             transform: translateY(-2px);
         }
+
         .search-icon {
             position: absolute;
             left: 1.5rem;
@@ -154,10 +177,12 @@
             font-size: 1.5rem;
             color: #667eea;
         }
+
         .results-container {
             max-height: 500px;
             overflow-y: auto;
         }
+
         .customer-result {
             background: white;
             border: 1px solid #e2e8f0;
@@ -167,23 +192,27 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
+
         .customer-result:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
             border-color: #667eea;
         }
+
         .customer-name {
             font-size: 1.3rem;
             font-weight: 600;
             color: #2d3748;
             margin-bottom: 0.5rem;
         }
+
         .customer-details {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
             align-items: center;
         }
+
         .customer-id {
             font-size: 1.1rem;
             color: #667eea;
@@ -193,6 +222,7 @@
             border-radius: 20px;
             display: inline-block;
         }
+
         .customer-partner {
             font-size: 1rem;
             color: #48bb78;
@@ -202,9 +232,11 @@
             border-radius: 20px;
             display: inline-block;
         }
+
         .partner-icon {
             margin-left: 0.3rem;
         }
+
         .no-results {
             text-align: center;
             color: #718096;
@@ -213,6 +245,7 @@
             background: rgba(0, 0, 0, 0.05);
             border-radius: 15px;
         }
+
         .file-status {
             background: rgba(72, 187, 120, 0.1);
             border: 1px solid rgba(72, 187, 120, 0.3);
@@ -223,12 +256,14 @@
             text-align: center;
             font-weight: 500;
         }
+
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-top: 2rem;
         }
+
         .stat-card {
             background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
@@ -237,15 +272,18 @@
             text-align: center;
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
+
         .stat-number {
             font-size: 2rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
         }
+
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.9;
         }
+
         @media (max-width: 768px) {
             .container {
                 padding: 0 1rem;
@@ -263,12 +301,14 @@
             .upload-area {
                 padding: 2rem 1rem;
             }
+
             .customer-details {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 0.5rem;
             }
         }
+
         .cloud-config {
             background: linear-gradient(135deg, #e6fffa, #f0fff4);
             border: 2px solid #48bb78;
@@ -276,17 +316,20 @@
             padding: 2rem;
             margin-bottom: 2rem;
         }
+
         .cloud-config h3 {
             color: #2f855a;
             margin-bottom: 1.5rem;
             text-align: center;
         }
+
         .config-section label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
             color: #2d3748;
         }
+
         .config-input {
             width: 100%;
             padding: 1rem;
@@ -297,15 +340,18 @@
             outline: none;
             transition: all 0.3s ease;
         }
+
         .config-input:focus {
             border-color: #48bb78;
             box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
         }
+
         .config-buttons {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
         }
+
         .config-btn {
             padding: 0.8rem 1.5rem;
             border: none;
@@ -315,52 +361,64 @@
             transition: all 0.3s ease;
             font-weight: 500;
         }
+
         .config-btn.primary {
             background: #48bb78;
             color: white;
         }
+
         .config-btn.primary:hover {
             background: #38a169;
             transform: translateY(-2px);
         }
+
         .config-btn {
             background: #e2e8f0;
             color: #4a5568;
         }
+
         .config-btn:hover {
             background: #cbd5e0;
             transform: translateY(-2px);
         }
+
         .config-btn.active {
             background: #667eea;
             color: white;
         }
+
         .config-help {
             margin-top: 1.5rem;
             padding: 1rem;
             background: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
         }
+
         .config-help details {
             cursor: pointer;
         }
+
         .config-help summary {
             font-weight: 600;
             color: #4a5568;
             margin-bottom: 0.5rem;
         }
+
         .config-help ol {
             margin-right: 1.5rem;
             color: #718096;
         }
+
         .config-help li {
             margin-bottom: 0.3rem;
         }
+
         .divider {
             text-align: center;
             margin: 2rem 0;
             position: relative;
         }
+
         .divider::before {
             content: '';
             position: absolute;
@@ -370,12 +428,14 @@
             height: 1px;
             background: #e2e8f0;
         }
+
         .divider span {
             background: white;
             padding: 0 1rem;
             color: #718096;
             font-weight: 500;
         }
+
         .status-indicator {
             display: inline-block;
             width: 10px;
@@ -383,13 +443,16 @@
             border-radius: 50%;
             margin-left: 0.5rem;
         }
+
         .status-indicator.connected {
             background: #48bb78;
             animation: pulse 2s infinite;
         }
+
         .status-indicator.disconnected {
             background: #f56565;
         }
+
         @keyframes pulse {
             0% {
                 transform: scale(1);
@@ -411,6 +474,7 @@
             <button class="nav-btn" onclick="showScreen('user')">מסך משתמש</button>
         </div>
     </nav>
+
     <div class="container">
         <!-- מסך מנהל -->
         <div id="admin-screen" class="screen active">
@@ -441,6 +505,7 @@
                         </details>
                     </div>
                 </div>
+
                 <!-- או העלאת קובץ ידנית -->
                 <div class="divider">
                     <span>או</span>
@@ -452,9 +517,11 @@
                     <div class="upload-subtext">תומך בקבצי .xlsx, .xls</div>
                     <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls" />
                 </div>
+
                 <div id="fileStatus" class="file-status" style="display: none;">
                     ✅ הנתונים נטענו בהצלחה!
                 </div>
+
                 <div class="stats">
                     <div class="stat-card">
                         <div class="stat-number" id="totalCustomers">0</div>
@@ -474,6 +541,7 @@
                 </div>
             </div>
         </div>
+
         <!-- מסך משתמש -->
         <div id="user-screen" class="screen">
             <div class="card">
@@ -483,6 +551,7 @@
                     <input type="text" id="searchInput" class="search-input" placeholder="הקלד שם לקוח לחיפוש..." />
                     <div class="search-icon">🔍</div>
                 </div>
+
                 <div id="searchResults" class="results-container">
                     <div class="no-results">
                         טען קובץ לקוחות במסך המנהל כדי להתחיל לחפש
@@ -491,6 +560,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
@@ -499,6 +569,7 @@
         let cloudUrl = '';
         let autoUpdateInterval = null;
         let isAutoUpdate = false;
+
         // החלפת מסכים
         function showScreen(screen) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -508,17 +579,22 @@
             event.target.classList.add('active');
             currentScreen = screen;
         }
+
         // הגדרת אזור העלאה
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
+
         uploadArea.addEventListener('click', () => fileInput.click());
+
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
         });
+
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.classList.remove('dragover');
         });
+
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
@@ -527,17 +603,20 @@
                 handleFile(files[0]);
             }
         });
+
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleFile(e.target.files[0]);
             }
         });
+
         // טיפול בקובץ
         function handleFile(file) {
             if (!file.name.match(/\.(xlsx|xls)$/)) {
                 alert('אנא בחר קובץ Excel (.xlsx או .xls)');
                 return;
             }
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
@@ -557,6 +636,7 @@
             };
             reader.readAsArrayBuffer(file);
         }
+
         // עיבוד נתוני לקוחות
         function processCustomerData(data) {
             customers = data.map((row, index) => {
@@ -568,6 +648,7 @@
                 let name = '';
                 let customerId = '';
                 let partner = '';
+
                 // חיפוש שם
                 for (let field of possibleNameFields) {
                     if (row[field]) {
@@ -575,6 +656,7 @@
                         break;
                     }
                 }
+
                 // חיפוש מספר לקוח
                 for (let field of possibleIdFields) {
                     if (row[field]) {
@@ -582,6 +664,7 @@
                         break;
                     }
                 }
+
                 // חיפוש שותף מטפל
                 for (let field of possiblePartnerFields) {
                     if (row[field]) {
@@ -589,12 +672,14 @@
                         break;
                     }
                 }
+
                 // אם לא נמצאו שדות מתאימים, קח את הערכים הראשונים
                 if (!name || !customerId) {
                     const keys = Object.keys(row);
                     name = name || row[keys[0]] || `לקוח ${index + 1}`;
                     customerId = customerId || row[keys[1]] || `ID-${index + 1}`;
                 }
+
                 return {
                     name: String(name),
                     id: String(customerId),
@@ -603,6 +688,7 @@
                 };
             });
         }
+
         // הצגת סטטוס הקובץ
         function showFileStatus() {
             const status = document.getElementById('fileStatus');
@@ -610,14 +696,17 @@
             status.classList.add('pulse');
             setTimeout(() => status.classList.remove('pulse'), 2000);
         }
+
         // עדכון סטטיסטיקות
         function updateStats() {
             document.getElementById('totalCustomers').textContent = customers.length;
             document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('he-IL');
         }
+
         // חיפוש לקוחות
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
+
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.trim();
             
@@ -625,23 +714,28 @@
                 searchResults.innerHTML = '<div class="no-results">טען קובץ לקוחות במסך המנהל כדי להתחיל לחפש</div>';
                 return;
             }
+
             if (query === '') {
                 searchResults.innerHTML = '<div class="no-results">הקלד שם לקוח לחיפוש</div>';
                 return;
             }
+
             const filteredCustomers = customers.filter(customer => 
                 customer.name.toLowerCase().includes(query.toLowerCase()) ||
                 customer.id.toLowerCase().includes(query.toLowerCase()) ||
                 customer.partner.toLowerCase().includes(query.toLowerCase())
             );
+
             displaySearchResults(filteredCustomers, query);
         });
+
         // הצגת תוצאות חיפוש
         function displaySearchResults(results, query) {
             if (results.length === 0) {
                 searchResults.innerHTML = `<div class="no-results">לא נמצאו תוצאות עבור "${query}"</div>`;
                 return;
             }
+
             const resultsHTML = results.map(customer => `
                 <div class="customer-result" onclick="selectCustomer('${customer.name}', '${customer.id}', '${customer.partner}')">
                     <div class="customer-name">${highlightText(customer.name, query)}</div>
@@ -651,14 +745,17 @@
                     </div>
                 </div>
             `).join('');
+
             searchResults.innerHTML = resultsHTML;
         }
+
         // הדגשת טקסט בחיפוש
         function highlightText(text, query) {
             if (!query) return text;
             const regex = new RegExp(`(${query})`, 'gi');
             return text.replace(regex, '<mark style="background: #ffd700; padding: 2px 4px; border-radius: 3px;">$1</mark>');
         }
+
         // בחירת לקוח
         function selectCustomer(name, id, partner) {
             let message = `נבחר לקוח: ${name}\nמספר לקוח: ${id}`;
@@ -672,6 +769,7 @@
             // - פתיחת חלון עם פרטים נוספים
             // - שמירה בהיסטוריה
         }
+
         // דוגמת נתונים לבדיקה (ניתן להסיר)
         function loadSampleData() {
             const sampleData = [
@@ -692,6 +790,7 @@
             updateStats();
             showFileStatus();
         }
+
         // טעינת דוגמה אוטומטית לבדיקה
         setTimeout(() => {
             // בדוק אם יש הגדרה שמורה
@@ -701,6 +800,7 @@
                 loadSampleData();
             }
         }, 1000);
+
         // פונקציות ענן
         function saveCloudConfig() {
             const url = document.getElementById('cloudUrl').value.trim();
@@ -720,11 +820,13 @@
             updateCloudStatus('מוגדר', 'connected');
             loadFromCloud();
         }
+
         function loadFromCloud() {
             if (!cloudUrl) {
                 alert('אנא הגדר קישור תחילה');
                 return;
             }
+
             updateCloudStatus('טוען...', 'connected');
             
             // המרת Google Sheets URL ל-CSV
@@ -735,6 +837,7 @@
                     csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId[1]}/export?format=csv`;
                 }
             }
+
             fetch(csvUrl)
                 .then(response => {
                     if (!response.ok) {
@@ -765,6 +868,7 @@
                     alert('שגיאה בטעינת הנתונים. בדוק את הקישור והגדרות השיתוף.');
                 });
         }
+
         function toggleAutoUpdate() {
             if (isAutoUpdate) {
                 // עצור עדכון אוטומטי
@@ -789,11 +893,13 @@
                 updateCloudStatus('אוטומטי', 'connected');
             }
         }
+
         function updateCloudStatus(status, type) {
             document.getElementById('cloudStatusText').textContent = status;
             const indicator = document.getElementById('statusIndicator');
             indicator.className = `status-indicator ${type}`;
         }
+
         function loadSavedConfig() {
             try {
                 const savedUrl = localStorage.getItem('customerCloudUrl');
