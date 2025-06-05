@@ -233,6 +233,16 @@
             display: inline-block;
         }
 
+        .customer-case-type {
+            font-size: 1rem;
+            color: #805ad5;
+            font-weight: 500;
+            background: rgba(128, 90, 213, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
         .partner-icon {
             margin-left: 0.3rem;
         }
@@ -644,10 +654,12 @@
                 const possibleNameFields = ['שם', 'שם לקוח', 'name', 'customer_name', 'לקוח'];
                 const possibleIdFields = ['מספר לקוח', 'מס לקוח', 'id', 'customer_id', 'מזהה'];
                 const possiblePartnerFields = ['שותף מטפל', 'שותף', 'מטפל', 'partner', 'therapist', 'treating_partner'];
+                const possibleCaseTypeFields = ['סוג תיק', 'סוג התיק', 'תיק', 'case_type', 'type', 'category', 'קטגוריה'];
                 
                 let name = '';
                 let customerId = '';
                 let partner = '';
+                let caseType = '';
 
                 // חיפוש שם
                 for (let field of possibleNameFields) {
@@ -673,6 +685,14 @@
                     }
                 }
 
+                // חיפוש סוג תיק
+                for (let field of possibleCaseTypeFields) {
+                    if (row[field]) {
+                        caseType = row[field];
+                        break;
+                    }
+                }
+
                 // אם לא נמצאו שדות מתאימים, קח את הערכים הראשונים
                 if (!name || !customerId) {
                     const keys = Object.keys(row);
@@ -684,6 +704,7 @@
                     name: String(name),
                     id: String(customerId),
                     partner: partner ? String(partner) : '',
+                    caseType: caseType ? String(caseType) : '',
                     originalData: row
                 };
             });
@@ -723,7 +744,8 @@
             const filteredCustomers = customers.filter(customer => 
                 customer.name.toLowerCase().includes(query.toLowerCase()) ||
                 customer.id.toLowerCase().includes(query.toLowerCase()) ||
-                customer.partner.toLowerCase().includes(query.toLowerCase())
+                customer.partner.toLowerCase().includes(query.toLowerCase()) ||
+                customer.caseType.toLowerCase().includes(query.toLowerCase())
             );
 
             displaySearchResults(filteredCustomers, query);
@@ -737,11 +759,12 @@
             }
 
             const resultsHTML = results.map(customer => `
-                <div class="customer-result" onclick="selectCustomer('${customer.name}', '${customer.id}', '${customer.partner}')">
+                <div class="customer-result" onclick="selectCustomer('${customer.name}', '${customer.id}', '${customer.partner}', '${customer.caseType}')">
                     <div class="customer-name">${highlightText(customer.name, query)}</div>
                     <div class="customer-details">
                         <div class="customer-id">מספר לקוח: ${highlightText(customer.id, query)}</div>
                         ${customer.partner ? `<div class="customer-partner"><span class="partner-icon">👤</span>שותף מטפל: ${highlightText(customer.partner, query)}</div>` : ''}
+                        ${customer.caseType ? `<div class="customer-case-type">📁 סוג תיק: ${highlightText(customer.caseType, query)}</div>` : ''}
                     </div>
                 </div>
             `).join('');
@@ -757,10 +780,13 @@
         }
 
         // בחירת לקוח
-        function selectCustomer(name, id, partner) {
+        function selectCustomer(name, id, partner, caseType) {
             let message = `נבחר לקוח: ${name}\nמספר לקוח: ${id}`;
             if (partner) {
                 message += `\nשותף מטפל: ${partner}`;
+            }
+            if (caseType) {
+                message += `\nסוג תיק: ${caseType}`;
             }
             alert(message);
             
@@ -773,17 +799,20 @@
         // דוגמת נתונים לבדיקה (ניתן להסיר)
         function loadSampleData() {
             const sampleData = [
-                { name: 'אברהם כהן', id: 'C001', partner: 'ד"ר שרה לוי' },
-                { name: 'שרה לוי', id: 'C002', partner: 'פרופ יוסף כהן' },
-                { name: 'דוד ישראלי', id: 'C003', partner: 'ד"ר מרים גולד' },
-                { name: 'רחל גולדברג', id: 'C004', partner: '' },
-                { name: 'יוסף מזרחי', id: 'C005', partner: 'ד"ר אברהם דוד' }
+                { name: 'אברהם כהן', id: 'C001', partner: 'ד"ר שרה לוי', caseType: 'אזרחי' },
+                { name: 'שרה לוי', id: 'C002', partner: 'פרופ יוסף כהן', caseType: 'פלילי' },
+                { name: 'דוד ישראלי', id: 'C003', partner: 'ד"ר מרים גולד', caseType: 'משפחה' },
+                { name: 'רחל גולדברג', id: 'C004', partner: '', caseType: 'מסחרי' },
+                { name: 'יוסף מזרחי', id: 'C005', partner: 'ד"ר אברהם דוד', caseType: 'עבודה' },
+                { name: 'מרים כהן', id: 'C006', partner: 'עו"ד דניאל לוי', caseType: 'נזיקין' },
+                { name: 'אלי רוזנברג', id: 'C007', partner: 'ד"ר רותי כהן', caseType: 'פלילי' }
             ];
             
             customers = sampleData.map(customer => ({
                 name: customer.name,
                 id: customer.id,
                 partner: customer.partner || '',
+                caseType: customer.caseType || '',
                 originalData: customer
             }));
             
