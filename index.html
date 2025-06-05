@@ -490,7 +490,7 @@
                         <div class="config-buttons">
                             <button class="config-btn primary" onclick="saveCloudConfig()">💾 שמור הגדרה</button>
                             <button class="config-btn" onclick="loadFromCloud()">🔄 טען כעת</button>
-                            <button class="config-btn" onclick="toggleAutoUpdate()">⏰ <span id="autoToggleText">הפעל עדכון אוטומטי</span></button>
+                            <button class="config-btn" onclick="toggleAutoUpdate()">📅 <span id="autoToggleText">הפעל עדכון שבועי</span></button>
                         </div>
                     </div>
                     <div class="config-help">
@@ -853,7 +853,14 @@
                             processCustomerData(results.data);
                             showFileStatus();
                             updateStats();
-                            updateCloudStatus('מחובר', 'connected');
+                            updateCloudStatus(isAutoUpdate ? 'שבועי' : 'מחובר', 'connected');
+                            
+                            // עדכן זמן העדכון האחרון
+                            try {
+                                localStorage.setItem('customerLastUpdate', Date.now().toString());
+                            } catch (e) {
+                                console.log('LocalStorage not available');
+                            }
                         },
                         error: function(error) {
                             console.error('שגיאה בפענוח CSV:', error);
@@ -871,26 +878,35 @@
 
         function toggleAutoUpdate() {
             if (isAutoUpdate) {
-                // עצור עדכון אוטומטי
+                // עצור עדכון שבועי
                 clearInterval(autoUpdateInterval);
                 isAutoUpdate = false;
-                document.getElementById('autoToggleText').textContent = 'הפעל עדכון אוטומטי';
+                document.getElementById('autoToggleText').textContent = 'הפעל עדכון שבועי';
                 updateCloudStatus('מחובר', 'connected');
             } else {
-                // התחל עדכון אוטומטי
+                // התחל עדכון שבועי
                 if (!cloudUrl) {
                     alert('אנא הגדר קישור תחילה');
                     return;
                 }
                 isAutoUpdate = true;
-                document.getElementById('autoToggleText').textContent = 'עצור עדכון אוטומטי';
+                document.getElementById('autoToggleText').textContent = 'עצור עדכון שבועי';
                 
-                // עדכון כל 5 דקות
+                // עדכון כל שבוע (7 ימים)
+                const weeklyInterval = 7 * 24 * 60 * 60 * 1000; // 7 ימים במילישניות
                 autoUpdateInterval = setInterval(() => {
                     loadFromCloud();
-                }, 5 * 60 * 1000);
+                }, weeklyInterval);
                 
-                updateCloudStatus('אוטומטי', 'connected');
+                updateCloudStatus('שבועי', 'connected');
+                
+                // שמור הגדרה
+                try {
+                    localStorage.setItem('customerWeeklyUpdate', 'true');
+                    localStorage.setItem('customerLastUpdate', Date.now().toString());
+                } catch (e) {
+                    console.log('LocalStorage not available');
+                }
             }
         }
 
@@ -903,10 +919,40 @@
         function loadSavedConfig() {
             try {
                 const savedUrl = localStorage.getItem('customerCloudUrl');
+                const weeklyUpdate = localStorage.getItem('customerWeeklyUpdate');
+                const lastUpdate = localStorage.getItem('customerLastUpdate');
+                
                 if (savedUrl) {
                     cloudUrl = savedUrl;
                     document.getElementById('cloudUrl').value = savedUrl;
-                    updateCloudStatus('שמור', 'connected');
+                    
+                    // בדוק אם צריך להפעיל עדכון שבועי
+                    if (weeklyUpdate === 'true') {
+                        isAutoUpdate = true;
+                        document.getElementById('autoToggleText').textContent = 'עצור עדכון שבועי';
+                        
+                        // התחל רענון שבועי
+                        const weeklyInterval = 7 * 24 * 60 * 60 * 1000;
+                        autoUpdateInterval = setInterval(() => {
+                            loadFromCloud();
+                        }, weeklyInterval);
+                        
+                        updateCloudStatus('שבועי', 'connected');
+                        
+                        // בדוק אם עבר שבוע מאז העדכון האחרון
+                        if (lastUpdate) {
+                            const lastUpdateTime = parseInt(lastUpdate);
+                            const weekAgo = Date.now() - weeklyInterval;
+                            if (lastUpdateTime < weekAgo) {
+                                // עבר שבוע, טען עכשיו
+                                loadFromCloud();
+                                return;
+                            }
+                        }
+                    } else {
+                        updateCloudStatus('שמור', 'connected');
+                    }
+                    
                     // טען אוטומטית
                     loadFromCloud();
                 }
