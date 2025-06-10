@@ -261,6 +261,16 @@
             display: inline-block;
         }
 
+        .customer-area {
+            font-size: 1.2rem;
+            color: #38a169;
+            font-weight: 600;
+            background: rgba(56, 161, 105, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
         .partner-icon {
             margin-left: 0.3rem;
         }
@@ -350,7 +360,8 @@
             .customer-id,
             .customer-file-number,
             .customer-partner,
-            .customer-case-type {
+            .customer-case-type,
+            .customer-area {
                 font-size: 1.1rem;
                 width: 100%;
                 text-align: center;
@@ -619,7 +630,8 @@
     <script>
         let customers = [];
         let currentScreen = 'user';
-        let cloudUrl = '';
+        // קישור קבוע לקובץ האקסל
+        let cloudUrl = 'https://docs.google.com/spreadsheets/d/1rZvtny_hfa-7VvV0MzkPMGssLIUUVDm6/edit?usp=sharing&ouid=107522064566051813948&rtpof=true&sd=true';
         let autoUpdateInterval = null;
         let isAutoUpdate = false;
 
@@ -706,12 +718,14 @@
                 const possiblePartnerFields = ['שותף מטפל', 'שותף', 'מטפל', 'partner', 'therapist', 'treating_partner'];
                 const possibleCaseTypeFields = ['סוג תיק', 'סוג התיק', 'תיק', 'case_type', 'type', 'category', 'קטגוריה'];
                 const possibleFileNumberFields = ['מספר תיק', 'מס תיק', 'file_number', 'case_number', 'תיק מספר'];
+                const possibleAreaFields = ['איזור', 'אזור', 'area', 'region', 'zone'];
                 
                 let name = '';
                 let customerId = '';
                 let partner = '';
                 let caseType = '';
                 let fileNumber = '';
+                let area = '';
 
                 // חיפוש שם
                 for (let field of possibleNameFields) {
@@ -753,6 +767,14 @@
                     }
                 }
 
+                // חיפוש איזור
+                for (let field of possibleAreaFields) {
+                    if (row[field]) {
+                        area = row[field];
+                        break;
+                    }
+                }
+
                 // אם לא נמצאו שדות מתאימים, קח את הערכים הראשונים
                 if (!name || !customerId) {
                     const keys = Object.keys(row);
@@ -766,6 +788,7 @@
                     partner: partner ? String(partner) : '',
                     caseType: caseType ? String(caseType) : '',
                     fileNumber: fileNumber ? String(fileNumber) : '',
+                    area: area ? String(area) : '',
                     originalData: row
                 };
             });
@@ -807,7 +830,8 @@
                 customer.id.toLowerCase().includes(query.toLowerCase()) ||
                 customer.partner.toLowerCase().includes(query.toLowerCase()) ||
                 customer.caseType.toLowerCase().includes(query.toLowerCase()) ||
-                customer.fileNumber.toLowerCase().includes(query.toLowerCase())
+                customer.fileNumber.toLowerCase().includes(query.toLowerCase()) ||
+                customer.area.toLowerCase().includes(query.toLowerCase())
             );
 
             displaySearchResults(filteredCustomers, query);
@@ -821,7 +845,7 @@
             }
 
             const resultsHTML = results.map(customer => `
-                <div class="customer-result" onclick="selectCustomer('${customer.name}', '${customer.id}', '${customer.partner}', '${customer.caseType}', '${customer.fileNumber}')">
+                <div class="customer-result" onclick="selectCustomer('${customer.name}', '${customer.id}', '${customer.partner}', '${customer.caseType}', '${customer.fileNumber}', '${customer.area}')">
                     <div class="customer-info">
                         <div class="customer-name">${highlightText(customer.name, query)}</div>
                         <div class="customer-details">
@@ -829,6 +853,7 @@
                             ${customer.fileNumber ? `<div class="customer-file-number">📂 מספר תיק: ${highlightText(customer.fileNumber, query)}</div>` : ''}
                             ${customer.partner ? `<div class="customer-partner"><span class="partner-icon">👤</span>שותף: ${highlightText(customer.partner, query)}</div>` : ''}
                             ${customer.caseType ? `<div class="customer-case-type">📁 סוג: ${highlightText(customer.caseType, query)}</div>` : ''}
+                            ${customer.area ? `<div class="customer-area">📍 איזור: ${highlightText(customer.area, query)}</div>` : ''}
                         </div>
                     </div>
                 </div>
@@ -845,7 +870,7 @@
         }
 
         // בחירת לקוח
-        function selectCustomer(name, id, partner, caseType, fileNumber) {
+        function selectCustomer(name, id, partner, caseType, fileNumber, area) {
             let message = `נבחר לקוח: ${name}\nמספר לקוח: ${id}`;
             if (fileNumber) {
                 message += `\nמספר תיק: ${fileNumber}`;
@@ -855,6 +880,9 @@
             }
             if (caseType) {
                 message += `\nסוג תיק: ${caseType}`;
+            }
+            if (area) {
+                message += `\nאיזור: ${area}`;
             }
             alert(message);
             
@@ -867,13 +895,13 @@
         // דוגמת נתונים לבדיקה (ניתן להסיר)
         function loadSampleData() {
             const sampleData = [
-                { name: 'אברהם כהן', id: 'C001', partner: 'ד"ר שרה לוי', caseType: 'אזרחי', fileNumber: 'F2024-001' },
-                { name: 'שרה לוי', id: 'C002', partner: 'פרופ יוסף כהן', caseType: 'פלילי', fileNumber: 'F2024-002' },
-                { name: 'דוד ישראלי', id: 'C003', partner: 'ד"ר מרים גולד', caseType: 'משפחה', fileNumber: 'F2024-003' },
-                { name: 'רחל גולדברג', id: 'C004', partner: '', caseType: 'מסחרי', fileNumber: 'F2024-004' },
-                { name: 'יוסף מזרחי', id: 'C005', partner: 'ד"ר אברהם דוד', caseType: 'עבודה', fileNumber: 'F2024-005' },
-                { name: 'מרים כהן', id: 'C006', partner: 'עו"ד דניאל לוי', caseType: 'נזיקין', fileNumber: 'F2024-006' },
-                { name: 'אלי רוזנברג', id: 'C007', partner: 'ד"ר רותי כהן', caseType: 'פלילי', fileNumber: 'F2024-007' }
+                { name: 'אברהם כהן', id: 'C001', partner: 'ד"ר שרה לוי', caseType: 'אזרחי', fileNumber: 'F2024-001', area: 'תל אביב' },
+                { name: 'שרה לוי', id: 'C002', partner: 'פרופ יוסף כהן', caseType: 'פלילי', fileNumber: 'F2024-002', area: 'ירושלים' },
+                { name: 'דוד ישראלי', id: 'C003', partner: 'ד"ר מרים גולד', caseType: 'משפחה', fileNumber: 'F2024-003', area: 'חיפה' },
+                { name: 'רחל גולדברג', id: 'C004', partner: '', caseType: 'מסחרי', fileNumber: 'F2024-004', area: 'באר שבע' },
+                { name: 'יוסף מזרחי', id: 'C005', partner: 'ד"ר אברהם דוד', caseType: 'עבודה', fileNumber: 'F2024-005', area: 'תל אביב' },
+                { name: 'מרים כהן', id: 'C006', partner: 'עו"ד דניאל לוי', caseType: 'נזיקין', fileNumber: 'F2024-006', area: 'אילת' },
+                { name: 'אלי רוזנברג', id: 'C007', partner: 'ד"ר רותי כהן', caseType: 'פלילי', fileNumber: 'F2024-007', area: 'נתניה' }
             ];
             
             customers = sampleData.map(customer => ({
@@ -882,6 +910,7 @@
                 partner: customer.partner || '',
                 caseType: customer.caseType || '',
                 fileNumber: customer.fileNumber || '',
+                area: customer.area || '',
                 originalData: customer
             }));
             
@@ -893,8 +922,11 @@
         setTimeout(() => {
             // בדוק אם יש הגדרה שמורה
             loadSavedConfig();
-            // אם אין, טען דוגמה
-            if (!cloudUrl) {
+            // אם הקישור כבר מוגדר, טען אוטומטית
+            if (cloudUrl) {
+                loadFromCloud();
+            } else {
+                // אם אין, טען דוגמה
                 loadSampleData();
             }
         }, 1000);
