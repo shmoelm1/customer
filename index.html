@@ -156,7 +156,7 @@
 
         .search-input {
             width: 100%;
-            padding: 1.2rem 3.5rem 1.2rem 1.5rem;
+            padding: 1.2rem 6rem 1.2rem 1.5rem;
             border: 2px solid #e2e8f0;
             border-radius: 15px;
             font-size: 1.1rem;
@@ -179,6 +179,31 @@
             font-size: 1.3rem;
             color: #667eea;
         }
+            .clear-button {
+    position: absolute;
+    left: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #e53e3e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: none;
+    transition: all 0.3s ease;
+}
+
+.clear-button:hover {
+    background: #c53030;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.clear-button.show {
+    display: block;
+}
 
         .results-container {
             max-height: 500px;
@@ -611,7 +636,9 @@
                 
                 <div class="search-container">
                     <input type="text" id="searchInput" class="search-input" placeholder="הקלד שם לקוח לחיפוש..." autofocus />
-                    <div class="search-icon">🔍</div>
+                    <div class="search-icon">🔍
+                    <button id="clearButton" class="clear-button" onclick="clearSearch()">×</button>
+                    </div>
                 </div>
 
                 <div id="searchResults" class="results-container">
@@ -1090,6 +1117,25 @@
         window.addEventListener('load', () => {
             document.getElementById('searchInput').focus();
         });
+        // פונקציה לניקוי החיפוש
+function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearButton').classList.remove('show');
+    document.getElementById('searchResults').innerHTML = '<div class="no-results">הקלד שם לקוח לחיפוש</div>';
+    document.getElementById('searchInput').focus();
+}
+
+// הצגה/הסתרה של כפתור האיפוס
+searchInput.addEventListener('input', (e) => {
+    const clearButton = document.getElementById('clearButton');
+    if (e.target.value.trim() !== '') {
+        clearButton.classList.add('show');
+    } else {
+        clearButton.classList.remove('show');
+    }
+    
+    // הקוד הקיים של החיפוש ממשיך כאן...
+});
     </script>
 </body>
 </html>
