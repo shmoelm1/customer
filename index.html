@@ -943,15 +943,20 @@
             showFileStatus();
         }
 
-        // טעינת דוגמה אוטומטית לבדיקה
-        setTimeout(() => {
-            // בדוק אם יש הגדרה שמורה
-            loadSavedConfig();
-            // אם אין, טען דוגמה
-            if (!cloudUrl) {
-                loadSampleData();
-            }
-        }, 1000);
+        // טעינה אוטומטית בעת פתיחת האתר
+window.addEventListener('load', () => {
+    // טען מיד את הנתונים מהקישור הקבוע
+    if (cloudUrl) {
+        console.log('טוען נתונים מהענן...');
+        loadFromCloud();
+    } else {
+        // אם אין קישור, טען דוגמה
+        loadSampleData();
+    }
+    
+    // הפעל פוקוס על שורת החיפוש
+    document.getElementById('searchInput').focus();
+});
 
         // פונקציות ענן
         function saveCloudConfig() {
@@ -978,7 +983,7 @@
                 alert('אנא הגדר קישור תחילה');
                 return;
             }
-
+            console.log('מתחיל טעינה מ:', cloudUrl); // הוסף שורה זו לבדיקה
             updateCloudStatus('טוען...', 'connected');
             
             // המרת Google Sheets URL ל-CSV
