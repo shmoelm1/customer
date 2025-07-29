@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -219,7 +219,17 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-
+        .customer-result {
+            position: relative;
+        }
+        .customer-result::after {
+                content: '📋';
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                opacity: 0.5;
+                font-size: 1rem;
+        }
         .customer-result:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
