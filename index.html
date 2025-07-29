@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -268,6 +268,15 @@
             display: inline-block;
         }
 
+        .customer-vat-file {
+            font-size: 1.2rem;
+            color: #9f7aea;
+            font-weight: 600;
+            background: rgba(159, 122, 234, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
         .customer-partner {
             font-size: 1.2rem;
             color: #48bb78;
@@ -744,6 +753,7 @@
                 const possibleCaseTypeFields = ['סוג תיק', 'סוג התיק', 'תיק', 'case_type', 'type', 'category', 'קטגוריה'];
                 const possibleFileNumberFields = ['מספר תיק', 'מס תיק', 'file_number', 'case_number', 'תיק מספר'];
                 const possibleAreaFields = ['איזור', 'אזור', 'area', 'region', 'מיקום'];
+                const possibleVatFileFields = ['מספר תיק מעמ', 'תיק מעמ', 'מספר תיק במעמ', 'vat_file', 'מעמ'];
                 
                 let name = '';
                 let customerId = '';
@@ -751,6 +761,7 @@
                 let caseType = '';
                 let fileNumber = '';
                 let area = '';
+                let vatFileNumber = '';
 
                 // חיפוש שם
                 for (let field of possibleNameFields) {
@@ -792,6 +803,14 @@
                     }
                 }
 
+                // חיפוש מספר תיק במע"מ
+                for (let field of possibleVatFileFields) {
+                    if (row[field]) {
+                        vatFileNumber = row[field];
+                        break;
+                    }
+                }
+                
                 // חיפוש איזור
                 for (let field of possibleAreaFields) {
                     if (row[field]) {
@@ -814,6 +833,7 @@
                     caseType: caseType ? String(caseType) : '',
                     fileNumber: fileNumber ? String(fileNumber) : '',
                     area: area ? String(area) : '',
+                    vatFileNumber: vatFileNumber ? String(vatFileNumber) : '',
                     originalData: row
                 };
             });
@@ -853,6 +873,7 @@
             const filteredCustomers = customers.filter(customer => 
                 customer.name.toLowerCase().includes(query.toLowerCase()) ||
                 customer.id.toLowerCase().includes(query.toLowerCase()) ||
+                customer.vatFileNumber.toLowerCase().includes(query.toLowerCase()) ||
                 customer.partner.toLowerCase().includes(query.toLowerCase()) ||
                 customer.caseType.toLowerCase().includes(query.toLowerCase()) ||
                 customer.fileNumber.toLowerCase().includes(query.toLowerCase()) ||
@@ -876,6 +897,7 @@
                         <div class="customer-details">
                             <div class="customer-id">מספר לקוח: ${highlightText(customer.id, query)}</div>
                             ${customer.fileNumber ? `<div class="customer-file-number">📂 מספר תיק: ${highlightText(customer.fileNumber, query)}</div>` : ''}
+                            ${customer.vatFileNumber ? `<div class="customer-vat-file">💰 תיק מע"מ: ${highlightText(customer.vatFileNumber, query)}</div>` : ''} 
                             ${customer.area ? `<div class="customer-area">📍 איזור: ${highlightText(customer.area, query)}</div>` : ''}
                             ${customer.partner ? `<div class="customer-partner"><span class="partner-icon">👤</span>שותף: ${highlightText(customer.partner, query)}</div>` : ''}
                             ${customer.caseType ? `<div class="customer-case-type">📁 סוג: ${highlightText(customer.caseType, query)}</div>` : ''}
@@ -895,10 +917,13 @@
         }
 
         // בחירת לקוח
-        function selectCustomer(name, id, partner, caseType, fileNumber, area) {
+        function selectCustomer(name, id, vatFileNumber, partner, caseType, fileNumber, area) {
             let message = `נבחר לקוח: ${name}\nמספר לקוח: ${id}`;
             if (fileNumber) {
                 message += `\nמספר תיק: ${fileNumber}`;
+            }
+            if (vatFileNumber) {
+                message += `\nתיק מע"מ: ${vatFileNumber}`;
             }
             if (area) {
                 message += `\nאיזור: ${area}`;
