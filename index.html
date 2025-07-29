@@ -1,4 +1,4 @@
-        <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -171,7 +171,14 @@
             transform: translateY(-2px);
         }
 
-       
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.3rem;
+            color: #667eea;
+        }
             .clear-button {
     position: absolute;
     left: 3rem;
@@ -212,17 +219,7 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        .customer-result {
-            position: relative;
-        }
-        .customer-result::after {
-                content: '📋';
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                opacity: 0.5;
-                font-size: 1rem;
-        }
+
         .customer-result:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
@@ -309,9 +306,7 @@
             border-radius: 20px;
             display: inline-block;
         }
-        .partner-icon {
-            margin-left: 0.3rem;
-        }
+
         .no-results {
             text-align: center;
             color: #718096;
@@ -565,26 +560,6 @@
                 transform: scale(1);
             }
         }
-            .copy-notification {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: #48bb78;
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-    transition: transform 0.3s ease;
-}
-
-.copy-notification.show {
-    transform: translateX(-50%) translateY(0);
-}
-   
     </style>
 </head>
 <body>
@@ -670,9 +645,9 @@
                 
                 <div class="search-container">
                     <input type="text" id="searchInput" class="search-input" placeholder="הקלד שם לקוח לחיפוש..." autofocus />
-                    </div>
                     <div class="search-icon">🔍
                     <button id="clearButton" class="clear-button" onclick="clearSearch()">×</button>
+                    </div>
                 </div>
 
                 <div id="searchResults" class="results-container">
@@ -916,7 +891,7 @@
             }
 
             const resultsHTML = results.map(customer => `
-                <div class="customer-result" onclick="selectCustomer('${customer.name}', '${customer.id}', '${customer.partner}', '${customer.caseType}', '${customer.fileNumber}', '${customer.area}', '${customer.vatFileNumber || ''}')">
+                <div class="customer-result" onclick="selectCustomer('${customer.name}', '${customer.id}', '${customer.partner}', '${customer.caseType}', '${customer.fileNumber}', '${customer.area}')">
                     <div class="customer-info">
                         <div class="customer-name">${highlightText(customer.name, query)}</div>
                         <div class="customer-details">
@@ -941,81 +916,25 @@
             return text.replace(regex, '<mark style="background: #ffd700; padding: 2px 4px; border-radius: 3px;">$1</mark>');
         }
 
-        // בחירת לקוח והעתקה ללוח
-function selectCustomer(name, id, partner, caseType, fileNumber, area, vatFileNumber) {
-    // בנה טקסט להעתקה
-    let textToCopy = '';
-    
-    // הוסף רק את השדות הרלוונטיים
-    if (name) textToCopy += `שם: ${name}\n`;
-    if (fileNumber) textToCopy += `מספר תיק: ${fileNumber}\n`;
-    if (vatFileNumber) textToCopy += `תיק מע"מ: ${vatFileNumber}\n`;
-    
-    // הסר את השורה הריקה האחרונה
-    textToCopy = textToCopy.trim();
-    
-    // העתק ללוח
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        // הצג הודעת הצלחה
-        showCopyNotification('הנתונים הועתקו ללוח!');
-    }).catch(err => {
-        // אם ההעתקה נכשלה, נסה שיטה חלופית
-        fallbackCopyTextToClipboard(textToCopy);
-    });
-}
-
-// פונקציה חלופית להעתקה (לדפדפנים ישנים)
-function fallbackCopyTextToClipboard(text) {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.width = "2em";
-    textArea.style.height = "2em";
-    textArea.style.padding = "0";
-    textArea.style.border = "none";
-    textArea.style.outline = "none";
-    textArea.style.boxShadow = "none";
-    textArea.style.background = "transparent";
-    
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-        document.execCommand('copy');
-        showCopyNotification('הנתונים הועתקו ללוח!');
-    } catch (err) {
-        showCopyNotification('לא ניתן להעתיק - אנא בחר ידנית');
-    }
-    
-    document.body.removeChild(textArea);
-}
-
-// הצגת הודעת העתקה
-function showCopyNotification(message) {
-    // צור אלמנט הודעה
-    const notification = document.createElement('div');
-    notification.className = 'copy-notification';
-    notification.textContent = message;
-    
-    // הוסף לגוף העמוד
-    document.body.appendChild(notification);
-    
-    // הצג עם אנימציה
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    
-    // הסתר אחרי 2 שניות
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 2000);
-
+        // בחירת לקוח
+        function selectCustomer(name, id, vatFileNumber, partner, caseType, fileNumber, area) {
+            let message = `נבחר לקוח: ${name}\nמספר לקוח: ${id}`;
+            if (fileNumber) {
+                message += `\nמספר תיק: ${fileNumber}`;
+            }
+            if (vatFileNumber) {
+                message += `\nתיק מע"מ: ${vatFileNumber}`;
+            }
+            if (area) {
+                message += `\nאיזור: ${area}`;
+            }
+            if (partner) {
+                message += `\nשותף מטפל: ${partner}`;
+            }
+            if (caseType) {
+                message += `\nסוג תיק: ${caseType}`;
+            }
+            alert(message);
             
             // כאן אפשר להוסיף פונקציונליות נוספת כמו:
             // - העתקה ללוח
@@ -1236,7 +1155,17 @@ function clearSearch() {
     document.getElementById('searchInput').focus();
 }
 
-
+// הצגה/הסתרה של כפתור האיפוס
+searchInput.addEventListener('input', (e) => {
+    const clearButton = document.getElementById('clearButton');
+    if (e.target.value.trim() !== '') {
+        clearButton.classList.add('show');
+    } else {
+        clearButton.classList.remove('show');
+    }
+    
+    // הקוד הקיים של החיפוש ממשיך כאן...
+});
     </script>
 </body>
 </html>
