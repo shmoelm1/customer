@@ -181,7 +181,7 @@
         }
             .clear-button {
     position: absolute;
-    left: 3rem;
+    right: 3rem;
     top: 50%;
     transform: translateY(-50%);
     background: #e53e3e;
@@ -316,7 +316,9 @@
             border-radius: 20px;
             display: inline-block;
         }
-
+        .partner-icon {
+            margin-left: 0.3rem;
+        }
         .no-results {
             text-align: center;
             color: #718096;
@@ -675,9 +677,9 @@
                 
                 <div class="search-container">
                     <input type="text" id="searchInput" class="search-input" placeholder="הקלד שם לקוח לחיפוש..." autofocus />
+                    </div>
                     <div class="search-icon">🔍
                     <button id="clearButton" class="clear-button" onclick="clearSearch()">×</button>
-                    </div>
                 </div>
 
                 <div id="searchResults" class="results-container">
@@ -1020,7 +1022,7 @@ function showCopyNotification(message) {
             document.body.removeChild(notification);
         }, 300);
     }, 2000);
-}
+
             
             // כאן אפשר להוסיף פונקציונליות נוספת כמו:
             // - העתקה ללוח
@@ -1241,17 +1243,7 @@ function clearSearch() {
     document.getElementById('searchInput').focus();
 }
 
-// הצגה/הסתרה של כפתור האיפוס
-searchInput.addEventListener('input', (e) => {
-    const clearButton = document.getElementById('clearButton');
-    if (e.target.value.trim() !== '') {
-        clearButton.classList.add('show');
-    } else {
-        clearButton.classList.remove('show');
-    }
-    
-    // הקוד הקיים של החיפוש ממשיך כאן...
-});
+
     </script>
 </body>
 </html>
